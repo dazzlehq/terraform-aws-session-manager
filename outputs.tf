@@ -1,9 +1,9 @@
 output "session_logs_bucket_name" {
-  value = aws_s3_bucket.session_logs_bucket.id
+  value = try(aws_s3_bucket.session_logs_bucket[0].id, "")
 }
 
 output "access_log_bucket_name" {
-  value = aws_s3_bucket.access_log_bucket.id
+  value = try(aws_s3_bucket.access_log_bucket[0].id, "")
 }
 
 output "cloudwatch_log_group_arn" {

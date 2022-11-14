@@ -70,33 +70,39 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
   # checkov:skip=CKV_AWS_111: ADD REASON
   # A custom policy for S3 bucket access
   # https://docs.aws.amazon.com/en_us/systems-manager/latest/userguide/setup-instance-profile.html#instance-profile-custom-s3-policy
-  statement {
-    sid = "S3BucketAccessForSessionManager"
 
-    actions = [
-      "s3:PutObject",
-      "s3:PutObjectAcl",
-      "s3:PutObjectVersionAcl",
-    ]
+  dynamic "statement" {
+    for_each = var.enable_log_to_s3 ? [1] : []
+    content {
+      sid = "S3BucketAccessForSessionManager"
 
-    resources = [
-      aws_s3_bucket.session_logs_bucket.arn,
-      "${aws_s3_bucket.session_logs_bucket.arn}/*",
-    ]
+      actions = [
+        "s3:PutObject",
+        "s3:PutObjectAcl",
+        "s3:PutObjectVersionAcl",
+      ]
+
+      resources = [
+        aws_s3_bucket.session_logs_bucket[0].arn,
+        "${aws_s3_bucket.session_logs_bucket[0].arn}/*",
+      ]
+    }
   }
 
-  statement {
-    sid = "S3EncryptionForSessionManager"
+  dynamic "statement" {
+    for_each = var.enable_log_to_s3 ? [1] : []
+    content {
+      sid = "S3EncryptionForSessionManager"
 
-    actions = [
-      "s3:GetEncryptionConfiguration",
-    ]
+      actions = [
+        "s3:GetEncryptionConfiguration",
+      ]
 
-    resources = [
-      aws_s3_bucket.session_logs_bucket.arn
-    ]
+      resources = [
+        aws_s3_bucket.session_logs_bucket[0].arn
+      ]
+    }
   }
-
 
   # A custom policy for CloudWatch Logs access
   # https://docs.aws.amazon.com/AmazonCloudWatch/latest/logs/permissions-reference-cwl.html
@@ -110,7 +116,7 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
       "logs:DescribeLogStreams",
     ]
 
-    resources = ["*"]
+    resources = ["arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.cloudwatch_log_group_name}-*"]
   }
 
   statement {
@@ -131,6 +137,7 @@ resource "aws_iam_policy" "ssm_s3_cwl_access" {
   name   = "ssm_s3_cwl_access-${local.region}"
   path   = "/"
   policy = data.aws_iam_policy_document.ssm_s3_cwl_access.json
+  tags   = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "SSM-role-policy-attach" {

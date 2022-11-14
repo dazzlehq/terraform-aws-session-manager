@@ -1,6 +1,7 @@
 variable "bucket_name" {
   description = "Name prefix of S3 bucket to store session logs"
   type        = string
+  default     = ""
 }
 
 variable "log_archive_days" {
@@ -18,6 +19,7 @@ variable "log_expire_days" {
 variable "access_log_bucket_name" {
   description = "Name prefix of S3 bucket to store access logs from session logs bucket"
   type        = string
+  default     = ""
 }
 
 variable "access_log_expire_days" {
@@ -102,4 +104,16 @@ variable "windows_shell_profile" {
   description = "The ShellProfile to use for windows based machines."
   default     = ""
   type        = string
+}
+
+variable "max_session_duration" {
+  description = "Maximun session duration in minutes"
+  type        = number
+  default     = 120
+}
+
+variable "idle_session_timeout" {
+  description = "Idle session timeout in minutes"
+  type        = number
+  default     = 20
 }
