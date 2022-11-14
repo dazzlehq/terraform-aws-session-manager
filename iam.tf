@@ -83,8 +83,8 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
       ]
 
       resources = [
-        aws_s3_bucket.session_logs_bucket.arn,
-        "${aws_s3_bucket.session_logs_bucket.arn}/*",
+        aws_s3_bucket.session_logs_bucket[0].arn,
+        "${aws_s3_bucket.session_logs_bucket[0].arn}/*",
       ]
     }
   }
@@ -99,7 +99,7 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
       ]
 
       resources = [
-        aws_s3_bucket.session_logs_bucket.arn
+        aws_s3_bucket.session_logs_bucket[0].arn
       ]
     }
   }
