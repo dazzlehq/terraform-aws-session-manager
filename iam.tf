@@ -116,7 +116,7 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
       "logs:DescribeLogStreams",
     ]
 
-    resources = ["*"]
+    resources = ["arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.cloudwatch_log_group_name}-*"]
   }
 
   statement {
@@ -137,6 +137,7 @@ resource "aws_iam_policy" "ssm_s3_cwl_access" {
   name   = "ssm_s3_cwl_access-${local.region}"
   path   = "/"
   policy = data.aws_iam_policy_document.ssm_s3_cwl_access.json
+  tags   = var.tags
 }
 
 resource "aws_iam_role_policy_attachment" "SSM-role-policy-attach" {
