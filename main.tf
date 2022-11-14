@@ -39,6 +39,8 @@ resource "aws_ssm_document" "session_manager_prefs" {
       s3EncryptionEnabled         = var.enable_log_to_s3 ? "true" : "false"
       cloudWatchLogGroupName      = var.enable_log_to_cloudwatch ? aws_cloudwatch_log_group.session_manager_log_group.name : ""
       cloudWatchEncryptionEnabled = var.enable_log_to_cloudwatch ? "true" : "false"
+      maxSessionDuration          = var.max_session_duration
+      idleSessionTimeout          = "${var.idle_session_timeout}"
       kmsKeyId                    = aws_kms_key.ssmkey.key_id
       shellProfile = {
         linux   = var.linux_shell_profile == "" ? var.linux_shell_profile : ""

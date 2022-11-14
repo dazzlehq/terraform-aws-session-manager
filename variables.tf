@@ -103,3 +103,15 @@ variable "windows_shell_profile" {
   default     = ""
   type        = string
 }
+
+variable "max_session_duration" {
+  description = "Maximun session duration in minutes"
+  type        = number
+  default     = 120
+}
+
+variable "idle_session_timeout" {
+  description = "Idle session timeout in minutes"
+  type        = number
+  default     = 20
+}
