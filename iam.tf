@@ -116,7 +116,7 @@ data "aws_iam_policy_document" "ssm_s3_cwl_access" {
       "logs:DescribeLogStreams",
     ]
 
-    resources = ["arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:${var.cloudwatch_log_group_name}-*"]
+    resources = ["*"]
   }
 
   statement {
